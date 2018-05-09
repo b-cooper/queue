@@ -1,6 +1,24 @@
 {
-	"scripts": {
-		"start": "node ./app.js",
-		"dev": "nodemon ./app.js"
-	}
+  "scripts": {
+    "start": "node ./app.js",
+    "dev": "nodemon ./app.js"
+  },
+  "name": "queue-exercise",
+  "version": "1.0.0",
+  "description": "a simple queue application",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/b-cooper/queue.git"
+  },
+  "author": {
+		"name": "Brian Cooper",
+		"email": "brian@allegro.com"
+	},
+  "license": "ISC",
+	"private": true,
+  "bugs": {
+    "url": "https://github.com/b-cooper/queue/issues"
+  },
+  "homepage": "https://github.com/b-cooper/queue#readme"
 }
