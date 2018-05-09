@@ -1,13 +1,12 @@
 {
   "scripts": {
-    "start": "node ./app.js",
-    "dev": "nodemon ./app.js",
-    "build": "babel ./app.js"
+    "start": "babel ./app.js | node",
+    "dev": "babel ./app.js | nodemon"
   },
   "name": "queue-exercise",
   "version": "1.0.0",
   "description": "a simple queue application",
-  "main": "start.js",
+  "main": "app.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/b-cooper/queue.git"
