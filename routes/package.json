@@ -1,24 +1,32 @@
 {
   "scripts": {
-    "start": "node ./app.js",
-    "dev": "nodemon ./app.js"
+    "start": "node ./start.js",
+    "dev": "nodemon ./start.js"
   },
   "name": "queue-exercise",
   "version": "1.0.0",
   "description": "a simple queue application",
-  "main": "index.js",
+  "main": "start.js",
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/b-cooper/queue.git"
   },
   "author": {
-		"name": "Brian Cooper",
-		"email": "brian@allegro.com"
-	},
+    "name": "Brian Cooper",
+    "email": "brian@allegro.com"
+  },
   "license": "ISC",
-	"private": true,
+  "private": true,
   "bugs": {
     "url": "https://github.com/b-cooper/queue/issues"
   },
-  "homepage": "https://github.com/b-cooper/queue#readme"
+  "homepage": "https://github.com/b-cooper/queue#readme",
+  "dependencies": {
+    "babel-register": "^6.26.0",
+    "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.6.1"
+  }
 }
