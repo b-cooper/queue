@@ -19,7 +19,7 @@ const createMessage = ({text}) => ({
 * Queue Abstraction
 ***************************************/
 
-const message_id_queue = [];
+let message_id_queue = [];
 const enqueueMessageId = (message_id) => {
 	message_id_queue = [...message_id_queue, message_id]
 };
@@ -35,7 +35,7 @@ const dequeueMessageId = () => {
 
 // this is object will act as our DB
 // a map keyed by, with message data/metadata value
-const message_db = {};
+let message_db = {};
 
 const addMessage = (message) => {
 	message_db = {...message_db, [message.id]: message}
