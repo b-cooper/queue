@@ -6,8 +6,6 @@ import _ from 'lodash';
 
 const app = express();
 
-
-
 const createMessage = ({text}) => ({
 	id: uuid(),
 	text,
