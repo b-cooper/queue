@@ -6,13 +6,6 @@ import _ from 'lodash';
 
 const app = express();
 
-const createMessage = ({text}) => ({
-	id: uuid(),
-	text,
-	created_at: moment(),
-	assigned_at: null
-});
-
 
 /**************************************
 * Queue Abstraction
@@ -38,7 +31,6 @@ const dequeueStaleMessageIds = () => {
 		}
 	}
 	const stale_ids = message_id_queue.slice(0, current_index);
-	stale_ids.forEach(markAsUnassigned);
 	message_id_queue = message_id_queue.slice(current_index);
 	return stale_ids;
 };
@@ -59,6 +51,13 @@ const allUnassigned = () => {
 	return unassigned_ids;
 };
 
+const recycleStaleMessages = () => {
+	// if there are stale assigned messages dequeue, unassign, and re-enqueue them
+	const stale_ids = dequeueStaleMessageIds();
+	stale_ids.forEach(markAsUnassigned);
+	enqueueMessageIds(...stale_ids);
+};
+
 /**************************************
 * Database Abstraction
 ***************************************/
@@ -67,36 +66,33 @@ const allUnassigned = () => {
 // a map keyed by, with message data/metadata value
 let message_db = {};
 
-const addMessage = (message) => {
-	console.log(message);
-	message_db = {...message_db, [message.id]: message}
+const createAndSaveMessage = ({message_text}) => {
+	const message = {
+		id: uuid(),
+		text,
+		created_at: moment(),
+		assigned_at: null
+	};
+	saveMessage(message);
+	return message;
 }
-const markAsAssigned = (message_id) => {
-	message_db[message_id].assigned_at = moment();
-};;
-const markAsUnassigned = (message_id) => {
-	message_db[message_id].assigned_at = null;
-};
-const isMessageUnassigned = (message_id) => (
-	_.isEmpty(message_db[message_id].assigned_at)
-);
+
+const saveMessage = (message) => { message_db = {...message_db, [message.id]: message}; }
+const getMessageById = (message_id) => message_db[message_id];
+const markAsAssigned = (message_id) => { message_db[message_id].assigned_at = moment(); };
+const markAsUnassigned = (message_id) => { message_db[message_id].assigned_at = null; };
+const isMessageUnassigned = (message_id) => _.isEmpty(message_db[message_id].assigned_at);
 const isMessageStale = (message_id) => {
 	const message = message_db[message_id];
 	// TODO: use moment helpers
 	return message.assigned_at && ((moment() - message.assigned_at) < process.env.time_limit)
 };
-const deleteMessage = (message_id) => {
-	message_db = _.omit(message_id);
-};
+const deleteMessage = (message_id) => { message_db = _.omit(message_id); };
 
 
 /**************************************
  * API endpoints
  **************************************/
-
-app.get('/', (req, res) => {
-	res.send('Hello World!');
-});
 
 // producer adds message (Create)
 app.post('/message', (req, res) => {
@@ -104,8 +100,7 @@ app.post('/message', (req, res) => {
 	// message_text = _.get(req, 'body.name');
 	const message_text = _.get(req, 'query.text');
 	if (message_text) {
-		const message = createMessage({text: message_text});
-		addMessage(message);
+		const message = createAndSaveMessage({message_text});
 		enqueueMessageIds(message.id)
 		res.send(200, `Your message was registered with id: ${message.id}`);
 	} else {
@@ -115,13 +110,10 @@ app.post('/message', (req, res) => {
 
 // consumer requests messages to process (Read)
 app.get('/message', (req, res) => {
-	console.log(req);
-	// TODO: call into staleness dequeue logic and return message
-	const stale_ids = dequeueStaleMessageIds();
-	enqueueMessageIds(...stale_ids)
+	recycleStaleMessages();
 	const next_assigned_ids = allUnassigned();
 	next_assigned_ids.forEach(markAsAssigned);
-	res.send(_.map(next_assigned_ids, id => (message_db[id])));
+	res.send(next_assigned_ids.map(getMessageById));
 });
 
 // consumer processes message (Delete)
