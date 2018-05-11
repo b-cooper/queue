@@ -52,19 +52,21 @@ We are looking for your software design skills, use of design principles, code c
 - POST /message
   Add a message to the queue (producer)
   Post to this endpoint with a body containing key 'text'. (x-www-form-urlencoded)
-  e.g. {text: 'Hey I have a question about your product'}
+  e.g. `{text: 'Hey I have a question about your product'}`
   If your message was successfully created you should receive a status 200 and the `message_id` of the added message
   If your message doesn't contain text, you'll receive a status 422.
 
 - GET /message
   Grab all non-assigned messages from queue (consumer)
   If there are unassigned messages in the queue, you'll receive status 200 and an array of message objects in the format:
+  ```
   {
     id: 'abcitseasyas123',
     message_text: 'The message to process',
     created_at: (time message was created),
     assigned_at: (time message was assigned to you)
   }
+  ```
   If there aren't any unassigned messages, you'll receive a status 200 and 'There are no new messages for you'
 
 - DELETE /message
@@ -77,12 +79,15 @@ We are looking for your software design skills, use of design principles, code c
   Debug endpoint returns an array of messages with their metadata, with older messages first.
   (e.g.  DELETE http://localhost:3000/state)
   You'll receive a 200 and an array containing any and all messages in the order of the queue in the format:
+  ```
   {
     id: 'abcitseasyas123',
     message_text: 'The message to process',
     created_at: (time message was created),
     assigned_at: (time message was assigned to you)
   }
+  ```
+
 
 ## Testing
   run `npm run test` to execute jest
