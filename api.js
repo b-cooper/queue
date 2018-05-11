@@ -21,9 +21,7 @@ import {
 export const registerAPIEndpoints = (app) => {
   // producer adds message (Create)
   app.post('/message', (req, res) => {
-    // TODO: use POST body, body-parser not quite working
-    // const message_text = _.get(req, 'body.text');
-    const message_text = _.get(req, 'query.text');
+    const message_text = _.get(req, 'body.text');
     if (message_text){
       const message = createAndSaveMessage({message_text});
       enqueueMessageIds(message.id)

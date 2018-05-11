@@ -27,17 +27,19 @@ export const markAsUnassigned = (message_id) => { message_db[message_id].assigne
 export const deleteMessage = (message_id) => { message_db = _.omit(message_id); };
 
 // just for tests;
-export const clearDB = () => { message_db = {}; }
-export const seedDB = (db) => { message_db = db; }
+export const clearDB = () => { message_db = {}; };
+export const seedDB = (db) => { message_db = db; };
 
 // ** DB Accessors **
 
 export const getMessageById = (message_id) => message_db[message_id];
-export const isMessageUnassigned = (message_id) => _.isEmpty(message_db[message_id].assigned_at);
+export const isMessageUnassigned = (message_id) => _.isNull(message_db[message_id].assigned_at);
 export const isMessageStale = (message_id) => {
-	const message = message_db[message_id];
-	// TODO: use moment helpers
-	return message.assigned_at && ((moment() - message.assigned_at) < (process.env.TIME_LIMIT_IN_MINUTES * 60 * 1000))
+  const message = message_db[message_id];
+  const time_passed = moment() - message.assigned_at;
+  const limit_in_ms = process.env.TIME_LIMIT_IN_MINUTES * 60 * 1000;
+	return message.assigned_at && time_passed > limit_in_ms
 };
 
+// just for dev
 export const dbDump = () => message_db;

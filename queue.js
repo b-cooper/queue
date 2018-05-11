@@ -19,8 +19,6 @@ export const recycleStaleMessages = () => {
 	// if there are stale assigned messages dequeue, unassign, and re-enqueue them
 	const stale_ids = dequeueStaleMessageIds();
   stale_ids.forEach(markAsUnassigned);
-  console.log(stale_ids, 'STALE')
-  console.log(message_id_queue, 'queue')
 	enqueueMessageIds(...stale_ids);
 };
 export const removeMessageId = (message_id) => { message_id_queue = _.without(message_id_queue, message_id); };
@@ -36,7 +34,6 @@ export const allUnassigned = () => {
 	let current_index = message_id_queue.length - 1;
 	while (!has_checked_for_unassigned_ids){
 		const current_id = message_id_queue[current_index];
-		console.log('in all unassigned', current_id, current_id && isMessageUnassigned(current_id));
 		if (current_id && isMessageUnassigned(current_id)){
 			current_index = current_index - 1;
 		} else {
@@ -49,7 +46,8 @@ export const allUnassigned = () => {
 
 // ** internal helpers **
 
-// TODO: comment this up
+// iterate from front of queue until a non-stale message is encountered
+// then dequeue up to that point
 const dequeueStaleMessageIds = () => {
 	let has_checked_for_stale_ids = false;
 	let current_index = 0;

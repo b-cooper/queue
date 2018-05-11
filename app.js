@@ -1,13 +1,18 @@
 // TODO: flow typing
+
+import dotenv from 'dotenv';
 import express from 'express';
 import bodyParser from 'body-parser'; // for transmitting messages in POST body
-
 import { registerAPIEndpoints } from './api';
+
+dotenv.config();
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 registerAPIEndpoints(app);
 
-// TODO: put port in env variable
-app.listen(3000, () => {
-	console.log('queue application server listening on port 3000')
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+	console.log(`queue application server listening on port ${PORT}`)
 });
