@@ -28,7 +28,7 @@ export const registerAPIEndpoints = (app) => {
       enqueueMessageIds(message.id)
       res.status(200).send(`Your message was registered with id: ${message.id}`);
     } else {
-      res.status(500).send('Message creation failed, try adding text');
+      res.status(422).send('Message creation failed, try adding text');
     }
   });
 
