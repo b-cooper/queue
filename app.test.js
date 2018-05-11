@@ -20,6 +20,7 @@ import {
   getMessageById,
   markAsUnassigned,
   markAsAssigned,
+  messageExists,
   // test fns
   clearDB,
   seedDB
@@ -227,6 +228,10 @@ describe('queue app', () => {
       seedDB(db);
       markAsUnassigned(assigned);
       expect(isMessageUnassigned(assigned)).toEqual(true);
+    });
+    it('messageExists', () => {
+      seedDB(db);
+      expect(messageExists(assigned)).toEqual(true);
     });
   });
 

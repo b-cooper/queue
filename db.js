@@ -24,7 +24,9 @@ export const createAndSaveMessage = ({message_text}) => {
 }
 export const markAsAssigned = (message_id) => { message_db[message_id].assigned_at = moment(); };
 export const markAsUnassigned = (message_id) => { message_db[message_id].assigned_at = null; };
-export const deleteMessage = (message_id) => { message_db = _.omit(message_id); };
+export const deleteMessage = (message_id) => {
+  message_db = _.omit(message_db, message_id);
+};
 
 // just for tests;
 export const clearDB = () => { message_db = {}; };
@@ -40,6 +42,7 @@ export const isMessageStale = (message_id) => {
   const limit_in_ms = process.env.TIME_LIMIT_IN_MINUTES * 60 * 1000;
 	return message.assigned_at && time_passed > limit_in_ms
 };
+export const messageExists = (message_id) => !!message_db[message_id]
 
 // just for dev
 export const dbDump = () => message_db;

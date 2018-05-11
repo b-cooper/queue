@@ -4,6 +4,7 @@ import {
   markAsAssigned,
   deleteMessage,
   getMessageById,
+  messageExists,
   dbDump
 } from './db';
 import {
@@ -25,9 +26,9 @@ export const registerAPIEndpoints = (app) => {
     if (message_text){
       const message = createAndSaveMessage({message_text});
       enqueueMessageIds(message.id)
-      res.send(200, `Your message was registered with id: ${message.id}`);
+      res.status(200).send(`Your message was registered with id: ${message.id}`);
     } else {
-      res.send(500, 'Message creation failed, try adding text');
+      res.status(500).send('Message creation failed, try adding text');
     }
   });
 
@@ -36,23 +37,27 @@ export const registerAPIEndpoints = (app) => {
     recycleStaleMessages();
     const next_assigned_ids = allUnassigned();
     next_assigned_ids.forEach(markAsAssigned);
-    res.send(next_assigned_ids.map(getMessageById));
+    if(!_.isEmpty(next_assigned_ids)){
+      res.status(200).send(next_assigned_ids.map(getMessageById));
+    } else {
+      res.status(200).send('There are no new messages for you');
+    }
   });
 
   // consumer processes message (Delete)
   app.delete('/message', (req, res) => {
     const message_id = _.get(req, 'query.message_id');
-    if (message_id){
+    if (message_id && messageExists(message_id)){
       deleteMessage(message_id);
       removeMessageId(message_id);
-      res.send(200, `Message with id: ${message_id} marked as processed`);
+      res.status(200).send(`Message with id: ${message_id} marked as processed`);
     } else {
-      res.send(404, 'Message with that id does not exist');
+      res.status(404).send('Message with that id does not exist');
     }
   });
 
   // debug endpoint
   app.get('/state', (req, res) => {
-    res.send(_.map(queueDump(), id => (dbDump()[id])))
+    res.status(200).send(_.map(queueDump(), id => (dbDump()[id])))
   });
 };

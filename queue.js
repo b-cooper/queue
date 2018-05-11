@@ -21,7 +21,9 @@ export const recycleStaleMessages = () => {
   stale_ids.forEach(markAsUnassigned);
 	enqueueMessageIds(...stale_ids);
 };
-export const removeMessageId = (message_id) => { message_id_queue = _.without(message_id_queue, message_id); };
+export const removeMessageId = (message_id) => {
+  message_id_queue = _.without(message_id_queue, message_id);
+};
 
 // just for tests;
 export const clearQueue = () => { message_id_queue = []; }
