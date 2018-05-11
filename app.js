@@ -12,5 +12,5 @@ registerAPIEndpoints(app);
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-	console.log(`queue application server listening on port ${PORT}`)
+	console.info(`queue application server listening on port ${PORT}`)
 });
