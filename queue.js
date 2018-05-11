@@ -10,7 +10,7 @@ import {
 * Queue Abstraction
 ***************************************/
 
-let message_id_queue = [];
+export let message_id_queue = []; // export only for tests
 
 // ** Queue Mutators **
 
@@ -18,11 +18,16 @@ export const enqueueMessageIds = (...message_ids) => { message_id_queue = [...me
 export const recycleStaleMessages = () => {
 	// if there are stale assigned messages dequeue, unassign, and re-enqueue them
 	const stale_ids = dequeueStaleMessageIds();
-	stale_ids.forEach(markAsUnassigned);
+  stale_ids.forEach(markAsUnassigned);
+  console.log(stale_ids, 'STALE')
+  console.log(message_id_queue, 'queue')
 	enqueueMessageIds(...stale_ids);
 };
 export const removeMessageId = (message_id) => { message_id_queue = _.without(message_id_queue, message_id); };
 
+// just for tests;
+export const clearQueue = () => { message_id_queue = []; }
+export const seedQueue = (queue) => { message_id_queue = queue; }
 
 // ** Queue Accessors **
 

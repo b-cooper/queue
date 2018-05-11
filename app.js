@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'; // for transmitting messages in POST body
 
 import { registerAPIEndpoints } from './api';
 const app = express();
-app.use(bodyParser);
+app.use(bodyParser.json());
 registerAPIEndpoints(app);
 
 // TODO: put port in env variable

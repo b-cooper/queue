@@ -21,15 +21,15 @@ import {
 export const registerAPIEndpoints = (app) => {
   // producer adds message (Create)
   app.post('/message', (req, res) => {
-    // TODO: use POST body
-    // message_text = _.get(req, 'body.name');
+    // TODO: use POST body, body-parser not quite working
+    // const message_text = _.get(req, 'body.text');
     const message_text = _.get(req, 'query.text');
     if (message_text){
       const message = createAndSaveMessage({message_text});
       enqueueMessageIds(message.id)
       res.send(200, `Your message was registered with id: ${message.id}`);
     } else {
-      res.send(401, 'Message creation failed, try adding text');
+      res.send(500, 'Message creation failed, try adding text');
     }
   });
 

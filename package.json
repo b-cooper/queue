@@ -1,7 +1,8 @@
 {
   "scripts": {
     "start": "node ./start.js",
-    "dev": "nodemon ./start.js"
+    "dev": "nodemon ./start.js",
+    "test": "jest"
   },
   "name": "queue-exercise",
   "version": "1.0.0",
@@ -20,6 +21,11 @@
   "bugs": {
     "url": "https://github.com/b-cooper/queue/issues"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
   "homepage": "https://github.com/b-cooper/queue#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -31,12 +37,14 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.3",
+    "babel-jest": "^22.4.3",
     "babel-plugin-lodash": "^3.3.2",
     "babel-plugin-transform-export-extensions": "^6.22.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-register": "^6.26.0",
-    "jest": "^22.4.3"
+    "jest": "^22.4.3",
+    "mockdate": "^2.0.2"
   }
 }

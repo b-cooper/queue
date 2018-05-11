@@ -8,7 +8,7 @@ import _ from 'lodash';
 
 // this is object will act as our DB
 // a map keyed by id, with message data/metadata value
-let message_db = {};
+export let message_db = {}; // only export for tests
 
 // ** DB Mutators **
 
@@ -26,6 +26,10 @@ export const markAsAssigned = (message_id) => { message_db[message_id].assigned_
 export const markAsUnassigned = (message_id) => { message_db[message_id].assigned_at = null; };
 export const deleteMessage = (message_id) => { message_db = _.omit(message_id); };
 
+// just for tests;
+export const clearDB = () => { message_db = {}; }
+export const seedDB = (db) => { message_db = db; }
+
 // ** DB Accessors **
 
 export const getMessageById = (message_id) => message_db[message_id];
@@ -33,7 +37,7 @@ export const isMessageUnassigned = (message_id) => _.isEmpty(message_db[message_
 export const isMessageStale = (message_id) => {
 	const message = message_db[message_id];
 	// TODO: use moment helpers
-	return message.assigned_at && ((moment() - message.assigned_at) < process.env.TIME_LIMIT_IN_MINUTES)
+	return message.assigned_at && ((moment() - message.assigned_at) < (process.env.TIME_LIMIT_IN_MINUTES * 60 * 1000))
 };
 
 export const dbDump = () => message_db;
